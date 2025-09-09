@@ -1,6 +1,5 @@
 import streamlit as st
 from pathlib import Path
-from datetime import date
 import base64
 
 # -----------------------------
@@ -637,3 +636,4 @@ st.markdown(
     unsafe_allow_html=True
 
 )
+
