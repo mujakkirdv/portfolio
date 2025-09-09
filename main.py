@@ -53,10 +53,10 @@ load_css(css_path)
 # -----------------------------
 # Assets
 # -----------------------------
-ASSETS = Path("data")
-PROFILE_IMG_1 = ASSETS / "mujakkir_profile.png"
-PROFILE_IMG_2 = ASSETS / "profile.png"
-RESUME_PDF = ASSETS / "resume.pdf"
+
+PROFILE_IMG_1 = "mujakkir_profile.png"
+PROFILE_IMG_2 = "profile.png"
+RESUME_PDF = "resume.pdf"
 
 # Helper function to display images with fallback
 def display_image(image_path, caption, width=300):
@@ -635,4 +635,5 @@ st.markdown(
     </div>
     """,
     unsafe_allow_html=True
+
 )
