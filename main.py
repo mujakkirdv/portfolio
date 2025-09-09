@@ -165,7 +165,7 @@ if page == "Home":
     left, right = st.columns([1, 2], gap="large")
     with left:
         display_image(PROFILE_IMG_1, "Mujakkir Ahmad")
-        display_resume_download(RESUME_PDF)
+        #display_resume_download(RESUME_PDF)
         display_image(PROFILE_IMG_2, "Mujakkir Ahmad")
 
     with right:
@@ -637,5 +637,6 @@ st.markdown(
     unsafe_allow_html=True
 
 )
+
 
 
