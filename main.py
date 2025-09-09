@@ -2,6 +2,7 @@ import streamlit as st
 from pathlib import Path
 import base64
 
+
 # -----------------------------
 # Page Config
 # -----------------------------
@@ -636,4 +637,5 @@ st.markdown(
     unsafe_allow_html=True
 
 )
+
 
