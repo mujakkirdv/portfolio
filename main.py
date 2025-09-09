@@ -1,7 +1,6 @@
 import streamlit as st
-from pathlib import Path
+import os
 import base64
-
 
 # -----------------------------
 # Page Config
@@ -47,42 +46,53 @@ def load_css(file_path):
         </style>
         """, unsafe_allow_html=True)
 
-css_path = Path("styles.css")
+# Use os.path instead of Path
+css_path = "styles.css"
 load_css(css_path)
 
 # -----------------------------
-# Assets
+# Assets - Create directory if it doesn't exist
 # -----------------------------
 
-PROFILE_IMG_1 = "mujakkir_profile.png"
-PROFILE_IMG_2 = "profile.png"
-RESUME_PDF = "resume.pdf"
+
+PROFILE_IMG_1 = os.path.join("mujakkir_profile.png")
+PROFILE_IMG_2 = os.path.join("profile.png")
+RESUME_PDF = os.path.join("resume.pdf")
 
 # Helper function to display images with fallback
 def display_image(image_path, caption, width=300):
     try:
-        return st.image(str(image_path), caption=caption, use_container_width=True)
-    except FileNotFoundError:
-        st.info(f"Add your {caption} image at {image_path}")
+        if os.path.exists(image_path):
+            return st.image(image_path, caption=caption, use_container_width=True)
+        else:
+            st.info(f"Add your {caption} image at {image_path}")
+            return None
+    except Exception as e:
+        st.error(f"Error loading image: {e}")
         return None
 
 # Helper function for PDF download with fallback
 def display_resume_download(pdf_path):
-    if pdf_path.exists():
-        with open(pdf_path, "rb") as f:
-            base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-            pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="600px" type="application/pdf"></iframe>'
-            st.markdown(pdf_display, unsafe_allow_html=True)
-            
-            st.download_button(
-                label="📄 Download Resume",
-                data=open(pdf_path, "rb").read(),
-                file_name="Mujakkir_Ahmad_Resume.pdf",
-                mime="application/pdf",
-                use_container_width=True
-            )
-    else:
-        st.warning(f"Add your resume at {pdf_path} to enable download and preview.")
+    try:
+        if os.path.exists(pdf_path):
+            with open(pdf_path, "rb") as f:
+                base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+                pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="600px" type="application/pdf"></iframe>'
+                st.markdown(pdf_display, unsafe_allow_html=True)
+                
+                # Reset file pointer for download
+                with open(pdf_path, "rb") as f:
+                    st.download_button(
+                        label="📄 Download Resume",
+                        data=f.read(),
+                        file_name="Mujakkir_Ahmad_Resume.pdf",
+                        mime="application/pdf",
+                        use_container_width=True
+                    )
+        else:
+            st.warning(f"Add your resume at {pdf_path} to enable download and preview.")
+    except Exception as e:
+        st.error(f"Error loading resume: {e}")
 
 # -----------------------------
 # Helper — Card component
@@ -165,25 +175,25 @@ if page == "Home":
     left, right = st.columns([1, 2], gap="large")
     with left:
         display_image(PROFILE_IMG_1, "Mujakkir Ahmad")
-        #display_resume_download(RESUME_PDF)
+        display_resume_download(RESUME_PDF)
         display_image(PROFILE_IMG_2, "Mujakkir Ahmad")
 
     with right:
         st.markdown("# 👋 Hi, I'm **Mujakkir Ahmad**")
         st.markdown(
     """
-    👋 Hi, I’m **Mujakkir Ahmad** — a **Data Analyst & Accountant** who turned curiosity for numbers into a passion for solving business problems.  
+    👋 Hi, I'm **Mujakkir Ahmad** — a **Data Analyst & Accountant** who turned curiosity for numbers into a passion for solving business problems.  
 
     📊 My journey started in **accounts and finance**, where I learned how numbers tell the true story of a business. Over time, I mastered tools like **Excel, QuickBooks, and Python (Pandas, Streamlit, Matplotlib. etc)** to manage reports and financial data.  
 
     🚀 That curiosity pushed me deeper into the world of **data science and analytics**. Today, I build interactive dashboards with **Python, Pandas, Streamlit, and Plotly**, helping organizations uncover insights, optimize processes, and make smarter, data-driven decisions.  
 
-    🌟 Achievements I’m proud of:  
+    🌟 Achievements I'm proud of:  
     - Automated daily financial reports, saving hours of manual work.  
     - Designed dashboards that improved management visibility on sales & expenses.  
     - Supported strategic decisions through clear and actionable insights.  
 
-    💡 For me, data isn’t just numbers — it’s the story behind growth, challenges, and opportunities. And my mission is to translate that story into decisions that move businesses forward.  
+    💡 For me, data isn't just numbers — it's the story behind growth, challenges, and opportunities. And my mission is to translate that story into decisions that move businesses forward.  
     """
 )
 
@@ -606,7 +616,7 @@ elif page == "Contact":
             <a href="https://linkedin.com/in/mujakkir-dv" target="_blank" style="text-decoration: none; margin-right: 15px;">
                 <span style="font-size: 1.5rem;">🔗</span> LinkedIn
             </a>
-            <a href="https://github.com/mujakkirah" target="_blank" style="text-decoration: none;">
+            <a href="https://github.com/mujakkirdv" target="_blank" style="text-decoration: none;">
                 <span style="font-size: 1.5rem;">💻</span> GitHub
             </a>
         </div>
@@ -635,8 +645,4 @@ st.markdown(
     </div>
     """,
     unsafe_allow_html=True
-
 )
-
-
-
